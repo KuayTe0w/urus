@@ -5,17 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urus Dashboard</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="assets/js/app.js" defer></script>
 </head>
 <body>
     <div class="container">
         <!--HEADER-->
         <header class="header">
+            <button id="menu-btn" class="menu-btn">☰</button>
             <h1>Kedai Runcit</h1>
+
+            <div class="header-actions">
+
+                <button class="icon-btn settings-btn">
+                    <img src="assets/icons/gear.png">
+                </button>
+
+                <button class="icon-btn logout-btn">
+                    <img src="assets/icons/logout.png">
+                </button>
+
+            </div>
         </header>
 
         <!--SIDEBAR-->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <a href="dashboard.html">
                 Dashboard
             </a>
@@ -28,16 +42,19 @@
             <a href="reports.html">
                 Reports
             </a>
-            <a href="settings.html">
-                Settings
-            </a>
         </aside>
 
         <!--MAIN-->
         <main class="main"></main>
 
+        <div class="resize-handle"></div>
+
         <!--CHATBOT-->
-        <aside class="chat-panel"></aside>
+        <aside class="chat-panel">
+            <h3>Ask Urus</h3>
+            <div class="messages"></div>
+            <input type="text" placeholder="Ask Urus...">
+        </aside>
     </div>
 </body>
 </html>

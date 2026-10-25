@@ -5,17 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Urus Dashboard</title>
 
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <script src="assets/js/app.js" defer></script>
 </head>
 <body>
     <div class="container">
         <!--HEADER-->
         <header class="header">
+            <button id="menu-btn" class="menu-btn">☰</button>
             <h1>Kedai Runcit</h1>
+
+            <div class="header-actions">
+
+                <button class="icon-btn settings-btn">
+                    <img src="assets/icons/gear.png">
+                </button>
+
+                <button class="icon-btn logout-btn">
+                    <img src="assets/icons/logout.png">
+                </button>
+
+            </div>
         </header>
 
         <!--SIDEBAR-->
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <a href="dashboard.html">
                 Dashboard
             </a>
@@ -28,13 +43,84 @@
             <a href="reports.html">
                 Reports
             </a>
-            <a href="settings.html">
-                Settings
-            </a>
         </aside>
 
         <!--MAIN-->
-        <main class="main"></main>
+        <main class="main">
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <h3>Total Products</h3>
+                    <p>127</p>
+                </div>
+                <div class="kpi-card warning">
+                    <h3>Low Stock</h3>
+                    <p>8</p>
+                </div>
+                <div class="kpi-card success">
+                    <h3>Sales</h3>
+                    <p>BND 2450</p>
+                </div>
+                <div class="kpi-card info">
+                    <h3>Orders</h3>
+                    <p>32</p>
+                </div>
+            </div>
+
+            <div class="bottom-row">
+                <div class="dashboard-card ai-insights">
+                    <h2>AI Insights</h2>
+                    <div class="placeholder">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel magnam earum dicta recusandae hic! Quis non id repellendus, voluptates enim dolores eaque nihil placeat? Earum tempora porro quia ut beatae.
+                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum consequuntur id excepturi fugiat inventore sed nisi aspernatur nobis. Officia quas unde quos cum ipsa rem id nesciunt dolore! Eos, ad!
+                    </div>
+                </div>
+                <div class="dashboard-card activity-history">
+                    <h2>Recent Activity</h2>
+
+                    <div class="history-list">
+
+                        <div class="history-item">
+                            <span class="history-type sale">SALE</span>
+                            <div>
+                                <strong>Milo 1kg</strong>
+                                <p>Sold 3 units</p>
+                            </div>
+                            <span class="history-time">2 min ago</span>
+                        </div>
+
+                        <div class="history-item">
+                            <span class="history-type purchase">ORDER</span>
+                            <div>
+                                <strong>Supplier Restock</strong>
+                                <p>50 units received</p>
+                            </div>
+                            <span class="history-time">15 min ago</span>
+                        </div>
+
+                        <div class="history-item">
+                            <span class="history-type stock">UPDATE</span>
+                            <div>
+                                <strong>Gardenia Bread</strong>
+                                <p>Stock adjusted</p>
+                            </div>
+                            <span class="history-time">1 hour ago</span>
+                        </div>
+
+                        <div class="history-item">
+                            <span class="history-type alert">ALERT</span>
+                            <div>
+                                <strong>Eggs Grade A</strong>
+                                <p>Low stock detected</p>
+                            </div>
+                            <span class="history-time">3 hours ago</span>
+                        </div>
+
+                    </div>  
+                </div>
+            </div>
+        </main>
+
+        <div class="resize-handle"></div>
 
         <!--CHATBOT-->
         <aside class="chat-panel">
