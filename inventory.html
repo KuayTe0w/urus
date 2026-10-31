@@ -3,58 +3,941 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urus Dashboard</title>
 
+    <title>\Cafe Inventory</title>
+
+    <!-- Shared project CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- Inventory page CSS -->
+    <link rel="stylesheet" href="assets/css/inventory.css">
+
+    <!-- Shared project JS -->
     <script src="assets/js/app.js" defer></script>
+
+    <!-- Inventory page JS -->
+    <script src="assets/js/inventory.js" defer></script>
 </head>
+
 <body>
-    <div class="container">
-        <!--HEADER-->
-        <header class="header">
-            <button id="menu-btn" class="menu-btn">☰</button>
-            <h1>Kedai Runcit</h1>
 
-            <div class="header-actions">
+<div class="container">
 
-                <button class="icon-btn settings-btn">
-                    <img src="assets/icons/gear.png">
+    <!-- HEADER -->
+    <header class="header">
+
+        <button id="menu-btn" class="menu-btn">
+            ☰
+        </button>
+
+        <div>
+            <h1>Cafe</h1>
+            <small class="header-subtitle">Inventory Management</small>
+        </div>
+
+        <div class="header-actions">
+
+            <button class="icon-btn settings-btn">
+                <img src="assets/icons/gear.png" alt="Settings">
+            </button>
+
+            <button class="icon-btn logout-btn">
+                <img src="assets/icons/logout.png" alt="Logout">
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <a href="dashboard.html">
+            Dashboard
+        </a>
+
+        <a href="inventory.html" class="active-link">
+            Inventory
+        </a>
+
+        <a href="orders.html">
+            Orders
+        </a>
+
+        <a href="reports.html">
+            Reports
+        </a>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main inventory-main">
+
+        <!-- PAGE HEADER -->
+        <section class="inventory-page-header">
+
+            <div>
+                <h2>Inventory</h2>
+                
+            </div>
+
+            <button
+                id="add-item-btn"
+                class="primary-btn"
+            >
+                + Add Item
+            </button>
+
+        </section>
+
+
+        <!-- KPI CARDS -->
+        <section class="inventory-kpis">
+
+            <div class="inventory-kpi-card total-card">
+
+                <span class="kpi-label">
+                    Total Items
+                </span>
+
+                <strong id="total-items">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="inventory-kpi-card warning-card">
+
+                <span class="kpi-label">
+                    Low Stock
+                </span>
+
+                <strong id="low-stock-count">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="inventory-kpi-card danger-card">
+
+                <span class="kpi-label">
+                    Out of Stock
+                </span>
+
+                <strong id="out-stock-count">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="inventory-kpi-card value-card">
+
+                <span class="kpi-label">
+                    Total Stock Value
+                </span>
+
+                <strong id="inventory-value">
+                    BND 0.00
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- INVENTORY CONTENT CARD -->
+        <section class="inventory-card">
+
+            <!-- SEARCH AND FILTERS -->
+            <div class="inventory-toolbar">
+
+                <input
+                    id="search-input"
+                    type="text"
+                    placeholder="Search inventory..."
+                >
+
+                <select id="category-filter">
+
+                    <option value="all">
+                        All Categories
+                    </option>
+
+                    <option value="Coffee & Tea">
+                        Coffee & Tea
+                    </option>
+
+                    <option value="Dairy">
+                        Dairy
+                    </option>
+
+                    <option value="Ingredients">
+                        Ingredients
+                    </option>
+
+                    <option value="Syrups">
+                        Syrups
+                    </option>
+
+                    <option value="Bakery">
+                        Bakery
+                    </option>
+
+                    <option value="Packaging">
+                        Packaging
+                    </option>
+
+                    <option value="Cleaning">
+                        Cleaning
+                    </option>
+
+                </select>
+
+
+                <select id="status-filter">
+
+                    <option value="all">
+                        All Statuses
+                    </option>
+
+                    <option value="In Stock">
+                        In Stock
+                    </option>
+
+                    <option value="Low Stock">
+                        Low Stock
+                    </option>
+
+                    <option value="Out of Stock">
+                        Out of Stock
+                    </option>
+
+                </select>
+
+
+                <span id="product-count" class="product-count">
+                    0 items
+                </span>
+
+            </div>
+
+
+            <!-- TABLE -->
+            <div class="table-wrapper">
+
+                <table class="inventory-table">
+
+                    <thead>
+
+                    <tr>
+                        <th>Item</th>
+                        <th>Category</th>
+                        <th>Current Stock</th>
+                        <th>Reorder Level</th>
+                        <th>Supplier</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="inventory-table-body">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- RESIZE HANDLE -->
+    <div class="resize-handle"></div>
+
+
+    <!-- CHATBOT -->
+    <aside class="chat-panel">
+
+        <h3>Ask Urus</h3>
+
+        <div class="messages"></div>
+
+        <input
+            type="text"
+            placeholder="Ask Urus..."
+        >
+
+    </aside>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- ADD ITEM MODAL -->
+<!-- ============================= -->
+
+<div id="add-item-modal" class="modal-overlay hidden">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add Inventory Item</h2>
+                <p>Add a new cafe ingredient or supply.</p>
+            </div>
+
+            <button
+                id="close-add-modal"
+                class="close-btn"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="add-item-form">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label for="item-name">
+                        Item Name
+                    </label>
+
+                    <input
+                        id="item-name"
+                        type="text"
+                        required
+                        placeholder="e.g. Fresh Milk 1L"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-sku">
+                        SKU
+                    </label>
+
+                    <input
+                        id="item-sku"
+                        type="text"
+                        required
+                        placeholder="e.g. CAF-MILK-01"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-category">
+                        Category
+                    </label>
+
+                    <select
+                        id="item-category"
+                        required
+                    >
+
+                        <option value="">
+                            Select Category
+                        </option>
+
+                        <option value="Coffee & Tea">
+                            Coffee & Tea
+                        </option>
+
+                        <option value="Dairy">
+                            Dairy
+                        </option>
+
+                        <option value="Ingredients">
+                            Ingredients
+                        </option>
+
+                        <option value="Syrups">
+                            Syrups
+                        </option>
+
+                        <option value="Bakery">
+                            Bakery
+                        </option>
+
+                        <option value="Packaging">
+                            Packaging
+                        </option>
+
+                        <option value="Cleaning">
+                            Cleaning
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-stock">
+                        Current Quantity
+                    </label>
+
+                    <input
+                        id="item-stock"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-unit">
+                        Stock Unit
+                    </label>
+
+                    <select
+                        id="item-unit"
+                        required
+                    >
+
+                        <option value="">
+                            Select Unit
+                        </option>
+
+                        <option value="pcs">
+                            Pieces (pcs)
+                        </option>
+
+                        <option value="cartons">
+                            Cartons
+                        </option>
+
+                        <option value="bags">
+                            Bags
+                        </option>
+
+                        <option value="bottles">
+                            Bottles
+                        </option>
+
+                        <option value="kg">
+                            Kilograms (kg)
+                        </option>
+
+                        <option value="g">
+                            Grams (g)
+                        </option>
+
+                        <option value="litres">
+                            Litres
+                        </option>
+
+                        <option value="ml">
+                            Millilitres (ml)
+                        </option>
+
+                        <option value="trays">
+                            Trays
+                        </option>
+
+                        <option value="packs">
+                            Packs
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-reorder">
+                        Reorder Level
+                    </label>
+
+                    <input
+                        id="item-reorder"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-supplier">
+                        Supplier
+                    </label>
+
+                    <input
+                        id="item-supplier"
+                        type="text"
+                        required
+                        placeholder="Supplier name"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="item-cost">
+                        Cost per Unit (BND)
+                    </label>
+
+                    <input
+                        id="item-cost"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label for="item-expiry">
+                        Expiry Date
+                    </label>
+
+                    <input
+                        id="item-expiry"
+                        type="date"
+                    >
+
+                    <small>
+                        Optional for non-perishable items.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    id="cancel-add-item"
+                    class="secondary-btn"
+                >
+                    Cancel
                 </button>
 
-                <button class="icon-btn logout-btn">
-                    <img src="assets/icons/logout.png">
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Add Item
                 </button>
 
             </div>
-        </header>
 
-        <!--SIDEBAR-->
-        <aside class="sidebar" id="sidebar">
-            <a href="dashboard.html">
-                Dashboard
-            </a>
-            <a href="inventory.html">
-                Inventory
-            </a>
-            <a href="orders.html">
-                Orders
-            </a>
-            <a href="reports.html">
-                Reports
-            </a>
-        </aside>
+        </form>
 
-        <!--MAIN-->
-        <main class="main"></main>
-
-        <div class="resize-handle"></div>
-
-        <!--CHATBOT-->
-        <aside class="chat-panel">
-            <h3>Ask Urus</h3>
-            <div class="messages"></div>
-            <input type="text" placeholder="Ask Urus...">
-        </aside>
     </div>
+
+</div>
+
+
+<!-- UPDATE STOCK MODAL -->
+
+<div id="stock-modal" class="modal-overlay hidden">
+
+    <div class="modal small-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Update Stock</h2>
+                <p id="stock-modal-product-name"></p>
+            </div>
+
+            <button
+                id="close-stock-modal"
+                class="close-btn"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="stock-update-form">
+
+            <input
+                type="hidden"
+                id="stock-product-id"
+            >
+
+
+            <div class="current-stock-box">
+
+                <span>Current Stock</span>
+
+                <strong id="current-stock-display">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="stock-action">
+                    Action
+                </label>
+
+                <select
+                    id="stock-action"
+                    required
+                >
+
+                    <option value="in">
+                        Stock In
+                    </option>
+
+                    <option value="out">
+                        Stock Out
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="stock-quantity">
+                    Quantity
+                </label>
+
+                <input
+                    id="stock-quantity"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="stock-reason">
+                    Reason
+                </label>
+
+                <select id="stock-reason">
+
+                    <option value="Supplier Delivery">
+                        Supplier Delivery
+                    </option>
+
+                    <option value="Usage">
+                        Usage
+                    </option>
+
+                    <option value="Damaged">
+                        Damaged
+                    </option>
+
+                    <option value="Expired">
+                        Expired
+                    </option>
+
+                    <option value="Manual Correction">
+                        Manual Correction
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    id="cancel-stock-update"
+                    class="secondary-btn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Update Stock
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- ============================= -->
+<!-- VIEW ITEM MODAL -->
+<!-- ============================= -->
+
+<div id="view-modal" class="modal-overlay hidden">
+
+    <div class="modal small-modal">
+
+        <div class="modal-header">
+
+            <h2>Item Details</h2>
+
+            <button
+                id="close-view-modal"
+                class="close-btn"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <div id="view-item-content"></div>
+
+    </div>
+
+</div>
+<!-- ============================= -->
+<!-- EDIT ITEM MODAL -->
+<!-- ============================= -->
+
+<div id="edit-item-modal" class="modal-overlay hidden">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Edit Inventory Item</h2>
+                <p>Update the item's information.</p>
+            </div>
+
+            <button
+                id="close-edit-modal"
+                class="close-btn"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="edit-item-form">
+
+            <input type="hidden" id="edit-item-id">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="edit-item-name">Item Name</label>
+
+                    <input
+                        id="edit-item-name"
+                        type="text"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="edit-item-sku">SKU</label>
+
+                    <input
+                        id="edit-item-sku"
+                        type="text"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="edit-item-category">Category</label>
+
+                    <select id="edit-item-category" required>
+
+                        <option value="Coffee & Tea">
+                            Coffee & Tea
+                        </option>
+
+                        <option value="Dairy">
+                            Dairy
+                        </option>
+
+                        <option value="Ingredients">
+                            Ingredients
+                        </option>
+
+                        <option value="Syrups">
+                            Syrups
+                        </option>
+
+                        <option value="Bakery">
+                            Bakery
+                        </option>
+
+                        <option value="Packaging">
+                            Packaging
+                        </option>
+
+                        <option value="Cleaning">
+                            Cleaning
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="edit-item-stock">
+                        Current Quantity
+                    </label>
+
+                    <input
+                        id="edit-item-stock"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="edit-item-unit">
+                        Stock Unit
+                    </label>
+
+                    <select id="edit-item-unit" required>
+
+                        <option value="pcs">Pieces (pcs)</option>
+                        <option value="cartons">Cartons</option>
+                        <option value="boxes">Boxes</option>
+                        <option value="bags">Bags</option>
+                        <option value="bottles">Bottles</option>
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="g">Grams (g)</option>
+                        <option value="litres">Litres</option>
+                        <option value="ml">Millilitres (ml)</option>
+                        <option value="trays">Trays</option>
+                        <option value="packs">Packs</option>
+
+                    </select>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="edit-item-reorder">
+                        Reorder Level
+                    </label>
+
+                    <input
+                        id="edit-item-reorder"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="edit-item-supplier">
+                        Supplier
+                    </label>
+
+                    <input
+                        id="edit-item-supplier"
+                        type="text"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group">
+                    <label for="edit-item-cost">
+                        Cost per Unit (BND)
+                    </label>
+
+                    <input
+                        id="edit-item-cost"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                    >
+                </div>
+
+
+                <div class="form-group full-width">
+                    <label for="edit-item-expiry">
+                        Expiry Date
+                    </label>
+
+                    <input
+                        id="edit-item-expiry"
+                        type="date"
+                    >
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    id="cancel-edit-item"
+                    class="secondary-btn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Save Changes
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 </body>
 </html>
