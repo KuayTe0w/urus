@@ -15,6 +15,8 @@
     <!-- Shared project JS -->
     <script src="assets/js/app.js" defer></script>
 
+    <script src="assets/vendor/xlsx.full.min.js" defer></script>
+
     <!-- Inventory page JS -->
     <script src="assets/js/inventory.js" defer></script>
 </head>
@@ -83,12 +85,33 @@
                 
             </div>
 
-            <button
-                id="add-item-btn"
-                class="primary-btn"
-            >
-                + Add Item
-            </button>
+            <div class="inventory-page-actions">
+
+                <button
+                    id="import-excel-btn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    ↑ Import (.XLSX)
+                </button>
+
+                <button
+                    id="export-excel-btn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    ↓ Export
+                </button>
+
+                <button
+                    id="add-item-btn"
+                    class="primary-btn"
+                    type="button"
+                >
+                    + Add Item
+                </button>
+
+            </div>
 
         </section>
 
@@ -163,39 +186,7 @@
                 >
 
                 <select id="category-filter">
-
-                    <option value="all">
-                        All Categories
-                    </option>
-
-                    <option value="Coffee & Tea">
-                        Coffee & Tea
-                    </option>
-
-                    <option value="Dairy">
-                        Dairy
-                    </option>
-
-                    <option value="Ingredients">
-                        Ingredients
-                    </option>
-
-                    <option value="Syrups">
-                        Syrups
-                    </option>
-
-                    <option value="Bakery">
-                        Bakery
-                    </option>
-
-                    <option value="Packaging">
-                        Packaging
-                    </option>
-
-                    <option value="Cleaning">
-                        Cleaning
-                    </option>
-
+                    <option value="all">All Categories</option>
                 </select>
 
 
@@ -346,44 +337,26 @@
                         Category
                     </label>
 
-                    <select
-                        id="item-category"
-                        required
-                    >
+                    <div class="select-with-action">
 
-                        <option value="">
-                            Select Category
-                        </option>
+                        <select
+                            id="item-category"
+                            required
+                        >
+                            <option value="">
+                                Select Category
+                            </option>
+                        </select>
 
-                        <option value="Coffee & Tea">
-                            Coffee & Tea
-                        </option>
+                        <button
+                            id="add-category-btn"
+                            class="inline-add-btn"
+                            type="button"
+                        >
+                            + New
+                        </button>
 
-                        <option value="Dairy">
-                            Dairy
-                        </option>
-
-                        <option value="Ingredients">
-                            Ingredients
-                        </option>
-
-                        <option value="Syrups">
-                            Syrups
-                        </option>
-
-                        <option value="Bakery">
-                            Bakery
-                        </option>
-
-                        <option value="Packaging">
-                            Packaging
-                        </option>
-
-                        <option value="Cleaning">
-                            Cleaning
-                        </option>
-
-                    </select>
+                    </div>
 
                 </div>
 
@@ -426,6 +399,10 @@
 
                         <option value="cartons">
                             Cartons
+                        </option>
+
+                        <option value="boxes">
+                            Boxes
                         </option>
 
                         <option value="bags">
@@ -488,12 +465,26 @@
                         Supplier
                     </label>
 
-                    <input
-                        id="item-supplier"
-                        type="text"
-                        required
-                        placeholder="Supplier name"
-                    >
+                    <div class="select-with-action">
+
+                        <select
+                            id="item-supplier"
+                            required
+                        >
+                            <option value="">
+                                Select Supplier
+                            </option>
+                        </select>
+
+                        <button
+                            id="add-supplier-btn"
+                            class="inline-add-btn"
+                            type="button"
+                        >
+                            + New
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -786,37 +777,23 @@
                 <div class="form-group">
                     <label for="edit-item-category">Category</label>
 
-                    <select id="edit-item-category" required>
+                    <div class="select-with-action">
 
-                        <option value="Coffee & Tea">
-                            Coffee & Tea
-                        </option>
+                        <select
+                            id="edit-item-category"
+                            required
+                        >
+                        </select>
 
-                        <option value="Dairy">
-                            Dairy
-                        </option>
+                        <button
+                            id="edit-add-category-btn"
+                            class="inline-add-btn"
+                            type="button"
+                        >
+                            + New
+                        </button>
 
-                        <option value="Ingredients">
-                            Ingredients
-                        </option>
-
-                        <option value="Syrups">
-                            Syrups
-                        </option>
-
-                        <option value="Bakery">
-                            Bakery
-                        </option>
-
-                        <option value="Packaging">
-                            Packaging
-                        </option>
-
-                        <option value="Cleaning">
-                            Cleaning
-                        </option>
-
-                    </select>
+                    </div>
                 </div>
 
 
@@ -878,11 +855,23 @@
                         Supplier
                     </label>
 
-                    <input
-                        id="edit-item-supplier"
-                        type="text"
-                        required
-                    >
+                    <div class="select-with-action">
+
+                        <select
+                            id="edit-item-supplier"
+                            required
+                        >
+                        </select>
+
+                        <button
+                            id="edit-add-supplier-btn"
+                            class="inline-add-btn"
+                            type="button"
+                        >
+                            + New
+                        </button>
+
+                    </div>
                 </div>
 
 
@@ -935,6 +924,419 @@
             </div>
 
         </form>
+
+    </div>
+
+</div>
+
+<!-- =========================================
+     NEW CATEGORY MODAL
+========================================= -->
+
+<div id="new-category-modal" class="modal-overlay hidden">
+
+    <div class="modal small-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add New Category</h2>
+                <p>Create a category and use it immediately.</p>
+            </div>
+
+            <button
+                id="close-category-modal"
+                class="close-btn"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <form id="new-category-form">
+
+            <div class="form-group">
+
+                <label for="new-category-name">
+                    Category Name
+                </label>
+
+                <input
+                    id="new-category-name"
+                    type="text"
+                    maxlength="60"
+                    required
+                    placeholder="e.g. Frozen Foods"
+                >
+
+                <small id="category-form-message"></small>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="cancel-category-btn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-btn"
+                    type="submit"
+                >
+                    Add Category
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     NEW SUPPLIER MODAL
+========================================= -->
+
+<div id="new-supplier-modal" class="modal-overlay hidden">
+
+    <div class="modal small-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Add New Supplier</h2>
+                <p>Add a supplier and use it immediately.</p>
+            </div>
+
+            <button
+                id="close-supplier-modal"
+                class="close-btn"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+        <form id="new-supplier-form">
+
+            <div class="form-group">
+
+                <label for="new-supplier-name">
+                    Supplier Name
+                </label>
+
+                <input
+                    id="new-supplier-name"
+                    type="text"
+                    maxlength="100"
+                    required
+                    placeholder="e.g. Borneo Food Supply"
+                >
+
+                <small id="supplier-form-message"></small>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="cancel-supplier-btn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    class="primary-btn"
+                    type="submit"
+                >
+                    Add Supplier
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     IMPORT EXCEL MODAL
+========================================= -->
+
+<div id="import-excel-modal" class="modal-overlay hidden">
+
+    <div class="modal import-modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h2>Import Inventory from Excel</h2>
+
+                <p>
+                    Add multiple cafe inventory items at once.
+                </p>
+            </div>
+
+            <button
+                id="close-import-modal"
+                class="close-btn"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <!-- STEP 1 -->
+        <div class="import-section">
+
+            <div class="import-section-number">
+                1
+            </div>
+
+            <div class="import-section-content">
+
+                <h3>Download the URUS template</h3>
+
+                <p>
+                    Use our template so URUS can correctly
+                    understand your inventory data.
+                </p>
+
+                <button
+                    id="download-template-btn"
+                    class="secondary-btn"
+                    type="button"
+                >
+                    ↓ Download Excel Template
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- STEP 2 -->
+        <div class="import-section">
+
+            <div class="import-section-number">
+                2
+            </div>
+
+            <div class="import-section-content">
+
+                <h3>Fill in your inventory</h3>
+
+                <p>
+                    Enter your products using the columns
+                    provided in the template.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- STEP 3 -->
+        <div class="import-section">
+
+            <div class="import-section-number">
+                3
+            </div>
+
+            <div class="import-section-content">
+
+                <h3>Upload the completed file</h3>
+
+                <div
+                    id="excel-drop-zone"
+                    class="excel-drop-zone"
+                >
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+                    <strong>
+                        Drag and drop your Excel file here
+                    </strong>
+
+                    <span>
+                        or
+                    </span>
+
+                    <button
+                        id="browse-excel-btn"
+                        class="secondary-btn"
+                        type="button"
+                    >
+                        Browse File
+                    </button>
+
+                    <small>
+                        Supported formats: .xlsx and .xls
+                    </small>
+
+                    <input
+                        id="excel-file-input"
+                        type="file"
+                        accept=".xlsx,.xls"
+                        hidden
+                    >
+
+                </div>
+
+
+                <div
+                    id="selected-excel-file"
+                    class="selected-file import-hidden"
+                >
+                </div>
+
+
+                <div
+                    id="import-file-error"
+                    class="import-error import-hidden"
+                >
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PREVIEW -->
+        <div
+            id="import-preview-section"
+            class="import-preview-section import-hidden"
+        >
+
+            <div class="preview-header">
+
+                <div>
+                    <h3>Import Preview</h3>
+
+                    <p>
+                        Check the data before importing.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="import-summary">
+
+                <div class="import-summary-card">
+                    <span>Total Rows</span>
+                    <strong id="import-total-count">0</strong>
+                </div>
+
+                <div class="import-summary-card success">
+                    <span>Ready</span>
+                    <strong id="import-valid-count">0</strong>
+                </div>
+
+                <div class="import-summary-card error">
+                    <span>Problems</span>
+                    <strong id="import-error-count">0</strong>
+                </div>
+
+                <div class="import-summary-card new-data">
+                    <span>New Categories</span>
+                    <strong id="import-new-category-count">0</strong>
+                </div>
+
+                <div class="import-summary-card new-data">
+                    <span>New Suppliers</span>
+                    <strong id="import-new-supplier-count">0</strong>
+                </div>
+
+            </div>
+
+
+            <div
+                id="import-new-data-section"
+                class="import-new-data import-hidden"
+            >
+
+                <div>
+                    <strong>New categories to create</strong>
+                    <ul id="import-new-categories-list"></ul>
+                </div>
+
+                <div>
+                    <strong>New suppliers to create</strong>
+                    <ul id="import-new-suppliers-list"></ul>
+                </div>
+
+                <small>
+                    These will be created automatically when you confirm the import.
+                </small>
+
+            </div>
+
+
+            <div class="import-preview-wrapper">
+
+                <table class="import-preview-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Row</th>
+                            <th>Item</th>
+                            <th>SKU</th>
+                            <th>Status</th>
+                            <th>Notes / Problems</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="import-preview-body">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            <small id="preview-limit-message"></small>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button
+                id="cancel-import-btn"
+                class="secondary-btn"
+                type="button"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="confirm-import-btn"
+                class="primary-btn"
+                type="button"
+                disabled
+            >
+                Import Items
+            </button>
+
+        </div>
 
     </div>
 
