@@ -1,0 +1,107 @@
+.main {
+    grid-area: main;
+    padding: var(--spacing);
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* KPI */
+
+.kpi-container {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: var(--spacing);
+}
+
+.kpi-card {
+    background: white;
+    border-radius: var(--radius);
+
+    padding: 20px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.kpi-card h3 {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.kpi-card p {
+    font-size: 1.8rem;
+    font-weight: bold;
+
+    color: var(--text);
+}
+
+/* CHART SECTION */
+
+.analytics-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.report-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* CARDS */
+
+.report-card {
+    background: white;
+    border-radius: var(--radius);
+
+    padding: 20px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.report-card h2 {
+    margin-bottom: 15px;
+    color: var(--text);
+}
+
+/* CHART PLACEHOLDER */
+
+.chart-placeholder {
+    height: 300px;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f2f4f7;
+    color: #999;
+}
+
+/* MENU ITEMS */
+
+.item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 20px;
+
+    background: #f7f7f7;
+
+    border-radius: 10px;
+}
+
+.item-row strong {
+    color: var(--primary);
+}
