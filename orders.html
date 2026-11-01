@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Urus Dashboard</title>
+    <title>Urus Orders</title>
 
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/orders.css">
     <script src="assets/js/app.js" defer></script>
 </head>
 <body>
@@ -13,7 +14,7 @@
         <!--HEADER-->
         <header class="header">
             <button id="menu-btn" class="menu-btn">☰</button>
-            <h1>Kedai Runcit</h1>
+            <h1>The Cafe</h1>
 
             <div class="header-actions">
 
@@ -45,15 +46,229 @@
         </aside>
 
         <!--MAIN-->
-        <main class="main"></main>
+        <main class="main">
+
+            <!-- Summary Cards -->
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Pending Orders</h3>
+                    <p>6</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>In Transit</h3>
+                    <p>3</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Received This Month</h3>
+                    <p>14</p>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Purchase Cost</h3>
+                    <p>BND 2,450</p>
+                </div>
+
+            </section>
+
+            <!-- Second Row -->
+            <section class="content-grid">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Pending Supplier Orders</h2>
+                    </div>
+
+                    <div class="order-list">
+
+                        <div class="list-item">
+                            <span class="status pending"></span>
+                            <div>
+                                <strong>PO-001</strong>
+                                <p>ABC Suppliers - Coffee Beans</p>
+                            </div>
+                            <span>3 Nov</span>
+                        </div>
+
+                        <div class="list-item">
+                            <span class="status transit"></span>
+                            <div>
+                                <strong>PO-002</strong>
+                                <p>Fresh Dairy - Milk</p>
+                            </div>
+                            <span>4 Nov</span>
+                        </div>
+
+                        <div class="list-item">
+                            <span class="status overdue"></span>
+                            <div>
+                                <strong>PO-003</strong>
+                                <p>Food Distributor - Sugar</p>
+                            </div>
+                            <span>Overdue</span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Upcoming Deliveries</h2>
+                    </div>
+
+                    <div class="activity-list">
+
+                        <div class="activity-item">
+                            <span class="badge delivery">DELIVERY</span>
+                            <div>
+                                <strong>Coffee Beans</strong>
+                                <p>ABC Suppliers</p>
+                            </div>
+                            <span>Tomorrow</span>
+                        </div>
+
+                        <div class="activity-item">
+                            <span class="badge delivery">DELIVERY</span>
+                            <div>
+                                <strong>Milk</strong>
+                                <p>Fresh Dairy</p>
+                            </div>
+                            <span>4 Nov</span>
+                        </div>
+
+                        <div class="activity-item">
+                            <span class="badge delivery">DELIVERY</span>
+                            <div>
+                                <strong>Sugar</strong>
+                                <p>Food Distributor</p>
+                            </div>
+                            <span>5 Nov</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Third Row -->
+            <section class="content-grid">
+
+                <div class="card">
+                    <h2>Most Ordered Inventory Items</h2>
+
+                    <div class="ranking-list">
+
+                        <div class="ranking-item">
+                            <span>Coffee Beans</span>
+                            <strong>24 Orders</strong>
+                        </div>
+
+                        <div class="ranking-item">
+                            <span>Milk</span>
+                            <strong>20 Orders</strong>
+                        </div>
+
+                        <div class="ranking-item">
+                            <span>Sugar</span>
+                            <strong>17 Orders</strong>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>Supplier Issues</h2>
+
+                    <div class="ranking-list">
+
+                        <div class="ranking-item">
+                            <span>ABC Suppliers</span>
+                            <strong>2 Delays</strong>
+                        </div>
+
+                        <div class="ranking-item">
+                            <span>Food Distributor</span>
+                            <strong>1 Missing Delivery</strong>
+                        </div>
+
+                        <div class="ranking-item">
+                            <span>Fresh Dairy</span>
+                            <strong>Late Response</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- Purchase Orders Table -->
+            <section class="card purchase-orders">
+
+                <div class="card-header">
+                    <h2>Recent Purchase Orders</h2>
+                    <button class="primary-btn">+ Create Order</button>
+                </div>
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>PO Number</th>
+                            <th>Supplier</th>
+                            <th>Product</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>PO-001</td>
+                            <td>ABC Suppliers</td>
+                            <td>Coffee Beans</td>
+                            <td>BND 320</td>
+                            <td><span class="status-badge pending">Pending</span></td>
+                            <td><button>View</button></td>
+                        </tr>
+
+                        <tr>
+                            <td>PO-002</td>
+                            <td>Fresh Dairy</td>
+                            <td>Milk</td>
+                            <td>BND 150</td>
+                            <td><span class="status-badge received">Received</span></td>
+                            <td><button>View</button></td>
+                        </tr>
+
+                        <tr>
+                            <td>PO-003</td>
+                            <td>Food Distributor</td>
+                            <td>Sugar</td>
+                            <td>BND 270</td>
+                            <td><span class="status-badge transit">In Transit</span></td>
+                            <td><button>View</button></td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </section>
+
+        </main>
 
         <div class="resize-handle"></div>
 
         <!--CHATBOT-->
         <aside class="chat-panel">
-            <h3>Ask Urus</h3>
+            <h3>Ask Pengurus</h3>
             <div class="messages"></div>
-            <input type="text" placeholder="Ask Urus...">
+            <input type="text" placeholder="Ask Pengurus...">
         </aside>
     </div>
 </body>
