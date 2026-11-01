@@ -14,7 +14,7 @@
         <!--HEADER-->
         <header class="header">
             <button id="menu-btn" class="menu-btn">☰</button>
-            <h1>Kedai Runcit</h1>
+            <h1>The Cafe</h1>
 
             <div class="header-actions">
 
@@ -50,28 +50,67 @@
             <div class="kpi-container">
                 <div class="kpi-card">
                     <h3>Total Products</h3>
-                    <p>127</p>
+                    <p>14</p>
                 </div>
                 <div class="kpi-card warning">
                     <h3>Low Stock</h3>
-                    <p>8</p>
+                    <p>3</p>
                 </div>
                 <div class="kpi-card success">
-                    <h3>Sales</h3>
-                    <p>BND 2450</p>
+                    <h3>Inventory Value</h3>
+                    <p>BND 540</p>
                 </div>
                 <div class="kpi-card info">
                     <h3>Orders</h3>
-                    <p>32</p>
+                    <p>6</p>
                 </div>
+            </div>
+
+            <div class="middle-row">
+                <div class="alerts-panel">
+                    <div class="alerts-header">
+                        <h3>Alerts</h3>
+                        <span class="alert-count">3</span>
+                    </div>
+
+                    <div class="alert-item critical">
+                        <div class="alert-icon">🔴</div>
+                        <div class="alert-info">
+                            <h4>Critical Stock</h4>
+                            <p>2 products need restocking</p>
+                        </div>
+                    </div>
+
+                    <div class="alert-item warning">
+                        <div class="alert-icon">🟡</div>
+                        <div class="alert-info">
+                            <h4>Low Stock</h4>
+                            <p>3 items below threshold</p>
+                        </div>
+                    </div>
+
+                    <div class="alert-item info">
+                        <div class="alert-icon">📦</div>
+                        <div class="alert-info">
+                            <h4>Pending Orders</h4>
+                            <p>6 supplier orders pending</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reserved Space -->
+                <div class="future-widget"></div>
             </div>
 
             <div class="bottom-row">
                 <div class="dashboard-card ai-insights">
                     <h2>AI Insights</h2>
                     <div class="placeholder">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel magnam earum dicta recusandae hic! Quis non id repellendus, voluptates enim dolores eaque nihil placeat? Earum tempora porro quia ut beatae.
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum consequuntur id excepturi fugiat inventore sed nisi aspernatur nobis. Officia quas unde quos cum ipsa rem id nesciunt dolore! Eos, ad!
+                        Coffee Beans demand increased by 22% compared to last week. <br><br>
+                        Milk inventory may run out within 3 days based on recent sales. <br><br>
+                        Tea stock turnover is healthy. <br><br>
+                        Suggested Action: <br>
+                        Place an order for Coffee Beans today.
                     </div>
                 </div>
                 <div class="dashboard-card activity-history">
@@ -80,10 +119,10 @@
                     <div class="history-list">
 
                         <div class="history-item">
-                            <span class="history-type sale">SALE</span>
+                            <span class="history-type purchase">ORDER</span>
                             <div>
-                                <strong>Milo 1kg</strong>
-                                <p>Sold 3 units</p>
+                                <strong>Coffee Beans</strong>
+                                <p>3 Kg bought</p>
                             </div>
                             <span class="history-time">2 min ago</span>
                         </div>
@@ -91,8 +130,8 @@
                         <div class="history-item">
                             <span class="history-type purchase">ORDER</span>
                             <div>
-                                <strong>Supplier Restock</strong>
-                                <p>50 units received</p>
+                                <strong>Milk</strong>
+                                <p>10 units bought</p>
                             </div>
                             <span class="history-time">15 min ago</span>
                         </div>
@@ -100,7 +139,7 @@
                         <div class="history-item">
                             <span class="history-type stock">UPDATE</span>
                             <div>
-                                <strong>Gardenia Bread</strong>
+                                <strong>Evaporated Milk</strong>
                                 <p>Stock adjusted</p>
                             </div>
                             <span class="history-time">1 hour ago</span>
@@ -109,10 +148,10 @@
                         <div class="history-item">
                             <span class="history-type alert">ALERT</span>
                             <div>
-                                <strong>Eggs Grade A</strong>
-                                <p>Low stock detected</p>
+                                <strong>Coffe Beans</strong>
+                                <p>Low Stock Detected</p>
                             </div>
-                            <span class="history-time">3 hours ago</span>
+                            <span class="history-time">3 Hours Ago</span>
                         </div>
 
                     </div>  
@@ -124,9 +163,9 @@
 
         <!--CHATBOT-->
         <aside class="chat-panel">
-            <h3>Ask Urus</h3>
+            <h3>Ask Pengurus</h3>
             <div class="messages"></div>
-            <input type="text" placeholder="Ask Urus...">
+            <input type="text" placeholder="Ask Pengurus...">
         </aside>
     </div>
 </body>

@@ -6,6 +6,7 @@
     <title>Urus Dashboard</title>
 
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/reports.css">
     <script src="assets/js/app.js" defer></script>
 </head>
 <body>
@@ -13,7 +14,7 @@
         <!--HEADER-->
         <header class="header">
             <button id="menu-btn" class="menu-btn">☰</button>
-            <h1>Kedai Runcit</h1>
+            <h1>The Cafe</h1>
 
             <div class="header-actions">
 
@@ -45,15 +46,105 @@
         </aside>
 
         <!--MAIN-->
-        <main class="main"></main>
+        <main class="main">
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <h3>Today's Revenue</h3>
+                    <p>BND 1,240</p>
+                </div>
+
+                <div class="kpi-card">
+                    <h3>Orders Completed</h3>
+                    <p>87</p>
+                </div>
+
+                <div class="kpi-card">
+                    <h3>Popular Item</h3>
+                    <p>Iced Latte</p>
+                </div>
+
+                <div class="kpi-card">
+                    <h3>Occupancy</h3>
+                    <p>72%</p>
+                </div>
+            </div>
+
+            <div class="analytics-row">
+                <div class="report-card large">
+                    <h2>Customer Visits Trend</h2>
+
+                    <div class="chart-placeholder">
+                        Line Chart Placeholder
+                    </div>
+                </div>
+                <div class="report-card">
+                    <h2>Orders by Category</h2>
+
+                    <div class="chart-placeholder">
+                        Bar Chart Placeholder
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-row">
+
+            <div class="report-card">
+                <h2>Popular Menu Items</h2>
+
+                <div class="item-list">
+
+                    <div class="item-row">
+                        <span>Iced Latte</span>
+                        <strong>42 Orders</strong>
+                    </div>
+
+                    <div class="item-row">
+                        <span>Butter Croissant</span>
+                        <strong>31 Orders</strong>
+                    </div>
+
+                    <div class="item-row">
+                        <span>Cheesecake</span>
+                        <strong>26 Orders</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="report-card">
+
+                <h2>Underperforming Items</h2>
+
+                <div class="item-list">
+
+                    <div class="item-row">
+                        <span>Matcha Latte</span>
+                        <strong>3 Orders</strong>
+                    </div>
+
+                    <div class="item-row">
+                        <span>Waffle</span>
+                        <strong>2 Orders</strong>
+                    </div>
+
+                    <div class="item-row">
+                        <span>Fruit Soda</span>
+                        <strong>1 Order</strong>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
 
         <div class="resize-handle"></div>
 
         <!--CHATBOT-->
         <aside class="chat-panel">
-            <h3>Ask Urus</h3>
+            <h3>Ask Pengurus</h3>
             <div class="messages"></div>
-            <input type="text" placeholder="Ask Urus...">
+            <input type="text" placeholder="Ask Pengurus...">
         </aside>
     </div>
 </body>
