@@ -8,14 +8,17 @@ a separate Firebase project, Authentication and database. Add preview domains
 to Firebase Authentication authorized domains when required.
 
 In GitHub repository settings, set variable `URUS_STAGING_PROJECT_ID` to the
-staging project ID and secret `FIREBASE_STAGING_SERVICE_ACCOUNT` to credentials
-for a staging-only deployment identity. Prefer short-lived workload identity
+test project ID and secret `FIREBASE_STAGING_SERVICE_ACCOUNT` to credentials
+for a dedicated deployment identity. Firebase Hosting permissions may also
+allow publishing the live channel in this shared project: treat this credential
+as privileged and do not reuse a broad migration credential. Prefer short-lived workload identity
 federation for production automation; never commit credentials. The preview job
 runs only for same-repository pull requests when the staging variable is set.
 Fork pull requests must be reviewed and tested by a maintainer in a trusted
 branch before a preview can use secrets. The workflow never automatically
 publishes a pull request to production.
 
-A separate Cloud SQL instance and services may incur charges. Preview Hosting
-alone is not a security boundary: it must be configured to call the staging
-Cloud Run service and that service must use staging Authentication and database.
+The separate preview database is on the same Cloud SQL instance, and the
+preview service uses its own runtime identity and database user. Authentication
+is shared, so preview accounts also exist in the current test project. Cloud
+resources may incur charges. Preview Hosting alone is not a security boundary.
