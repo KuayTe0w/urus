@@ -1,0 +1,10 @@
+[Unit]
+Description=Back up URUS PostgreSQL database
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/bin/bash /root/projects/urus/deploy/backup.sh
+UMask=0077

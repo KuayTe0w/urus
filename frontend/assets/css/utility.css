@@ -1,0 +1,5 @@
+.utility-container { grid-template-columns: 1fr; grid-template-areas: "header" "main"; }
+.utility-container .header { padding: 0; }
+.utility-container .main { grid-area: main; max-width: none; margin: 0; padding: 20px; overflow-y: auto; }
+.utility-container .header strong { margin: 0; }
+.utility-container .table-wrap { background: white; }

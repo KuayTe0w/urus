@@ -1,0 +1,9 @@
+*
+!Dockerfile
+!.dockerignore
+!backend/
+!backend/**
+!frontend/
+!frontend/**
+backend/tests/
+backend/**/__pycache__/

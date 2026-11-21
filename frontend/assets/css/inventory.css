@@ -1106,3 +1106,8 @@
         grid-column: auto;
     }
 }
+.inventory-main, .inventory-card, .table-wrapper { min-width: 0; max-width: 100%; }
+.table-wrapper { display: block; overflow-x: auto; }
+.inventory-table { display: table; width: 100%; }
+.reorder-btn { display: inline-flex; align-items: center; text-decoration: none; white-space: nowrap; }
+.reorder-unavailable { color: #64748b; font-size: 12px; }

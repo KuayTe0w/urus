@@ -1,0 +1,16 @@
+[Unit]
+Description=URUS inventory application
+After=network.target postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/projects/urus
+EnvironmentFile=/root/projects/urus/.env
+ExecStart=/root/projects/urus/.venv/bin/gunicorn --bind 0.0.0.0:5000 --workers 2 --threads 4 --worker-class gthread backend.app:create_app()
+Restart=on-failure
+RestartSec=5
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

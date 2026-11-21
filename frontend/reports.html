@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urus Reports</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/reports.css">
+    <script src="assets/js/app.js" defer></script>
+    <script src="assets/vendor/xlsx.full.min.js" defer></script>
+    <script type="module" src="assets/js/reports.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!--HEADER-->
+        <header class="header">
+            <button id="menu-btn" class="menu-btn">☰</button>
+            <h1 id="business-name" aria-live="polite"></h1>
+
+            <div class="header-actions">
+
+                <button class="icon-btn settings-btn">
+                    <img src="assets/icons/gear.png">
+                </button>
+
+                <button class="icon-btn logout-btn">
+                    <img src="assets/icons/logout.png">
+                </button>
+
+            </div>
+        </header>
+
+        <!--SIDEBAR-->
+        <aside class="sidebar" id="sidebar"><a href="dashboard.html">Dashboard</a><a href="inventory.html">Inventory</a><a href="suppliers.html">Suppliers</a><a href="movements.html">Stock movements</a><a href="orders.html">Orders</a><a href="reports.html">Reports</a></aside>
+
+        <!--MAIN-->
+        <main class="main reports-main"><div class="kpi-container"><div class="kpi-card"><h3>Today's Revenue</h3><p>—</p></div><div class="kpi-card"><h3>Orders Completed</h3><p>—</p></div><div class="kpi-card"><h3>Popular Item</h3><p>—</p></div><div class="kpi-card"><h3>Occupancy</h3><p>—</p></div></div><div class="analytics-row"><div class="report-card large"><h2>Customer Visits Trend</h2><div class="chart-placeholder"></div></div><div class="report-card"><h2>Orders by Category</h2><div class="chart-placeholder"></div></div></div><div class="report-row"><div class="report-card"><h2>Popular Menu Items</h2><div class="item-list"></div></div><div class="report-card"><h2>Underperforming Items</h2><div class="item-list"></div></div></div><h2>Inventory report</h2><p>Current stock value is an estimate based on the current cost per unit. Expiry dates apply to the product, not individual batches.</p><p id="report-error" role="alert"></p><div class="report-toolbar"><label>Show <select id="report-filter"><option value="all">All products</option><option value="reorder">Reorder needed</option><option value="expiring">Expires within 30 days</option><option value="expired">Expired</option></select></label><label>Category <select id="report-category"><option value="">All categories</option></select></label><label>Search <input id="report-search" type="search" placeholder="Search by name, SKU, category or supplier"></label><button id="report-export">Export Excel</button></div><p id="report-count"></p><div class="report-table"><table><thead><tr><th>Item</th><th>Category</th><th>Supplier</th><th>Stock</th><th>Reorder level</th><th>Est. value</th><th>Expiry</th><th>Action</th></tr></thead><tbody id="report-items"></tbody></table></div><section class="purchase-report"><h2>Purchase orders</h2><p>Filtered by order creation date in the business time zone. Amounts are recorded order values; order currencies were not saved separately.</p><form id="purchase-filters" class="report-toolbar"><label>From <input type="date" id="purchase-from"></label><label>To <input type="date" id="purchase-to"></label><label>Status <select id="purchase-status"><option value="">All statuses</option><option value="pending">Pending</option><option value="received">Received</option></select></label><button>Apply</button><button type="button" id="purchase-export">Export Excel</button></form><p id="purchase-error" role="alert"></p><p id="purchase-count"></p><div class="report-table"><table><thead><tr><th>Order</th><th>Supplier</th><th>Created</th><th>Received</th><th>Status</th><th>Order value</th></tr></thead><tbody id="purchase-items"></tbody></table></div></section></main>
+
+        <div class="resize-handle"></div>
+
+        <!--CHATBOT-->
+        <aside class="chat-panel">
+            <h3>Ask Pengurus</h3>
+            <div class="messages"></div>
+            <input type="text" placeholder="Ask Pengurus...">
+        </aside>
+
+
+    </div>
+</body>
+</html>

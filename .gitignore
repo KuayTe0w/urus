@@ -1,0 +1,11 @@
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+.backups/
+.firebase-public/
+.firebase/
+.tools/
+.secrets/
+firebase-debug.log
+.preview-hosting/

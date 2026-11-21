@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urus Dashboard</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <script src="assets/js/app.js" defer></script>
+    <script type="module" src="assets/js/dashboard-api.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!--HEADER-->
+        <header class="header">
+            <button id="menu-btn" class="menu-btn">☰</button>
+            <h1 id="business-name" aria-live="polite"></h1>
+            <select id="business" aria-label="Business" hidden></select>
+
+            <div class="header-actions">
+
+                <button class="icon-btn settings-btn">
+                    <img src="assets/icons/gear.png">
+                </button>
+
+                <button class="icon-btn logout-btn">
+                    <img src="assets/icons/logout.png">
+                </button>
+
+            </div>
+        </header>
+
+        <!--SIDEBAR-->
+        <aside class="sidebar" id="sidebar"><a href="dashboard.html">Dashboard</a><a href="inventory.html">Inventory</a><a href="suppliers.html">Suppliers</a><a href="movements.html">Stock movements</a><a href="orders.html">Orders</a><a href="reports.html">Reports</a></aside>
+
+        <!--MAIN-->
+        <main class="main">
+            <p id="message" role="alert"></p>
+            <div class="kpi-container">
+                <div class="kpi-card">
+                    <h3>Total Products</h3>
+                    <p id="total-products">—</p>
+                </div>
+                <div class="kpi-card warning">
+                    <h3>Low Stock</h3>
+                    <p id="low-stock">—</p>
+                </div>
+                <div class="kpi-card success">
+                    <h3>Inventory Value</h3>
+                    <p id="inventory-value">—</p>
+                </div>
+
+            </div>
+
+            <div class="middle-row">
+                <div class="alerts-panel">
+                    <div class="alerts-header">
+                        <h3>Alerts</h3>
+                        <span class="alert-count" id="alert-count">—</span>
+                    </div>
+
+                    <div class="alert-item critical">
+                        <div class="alert-icon">🔴</div>
+                        <div class="alert-info">
+                            <h4>Critical Stock</h4>
+                            <p id="out-stock-alert">—</p>
+                        </div>
+                    </div>
+
+                    <div class="alert-item warning">
+                        <div class="alert-icon">🟡</div>
+                        <div class="alert-info">
+                            <h4>Low Stock</h4>
+                            <p id="low-stock-alert">—</p>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="bottom-row">
+                <div class="dashboard-card ai-insights"><h2>AI Insights</h2><div class="placeholder"></div></div>
+
+                <div class="dashboard-card activity-history">
+                    <h2>Recent Activity</h2>
+
+                    <div class="history-list" id="activity"><p>Loading activity…</p></div>
+                </div>
+            </div>
+        </main>
+
+        <div class="resize-handle"></div>
+
+        <!--CHATBOT-->
+        <aside class="chat-panel">
+            <h3>Ask Pengurus</h3>
+            <div class="messages"></div>
+            <input type="text" placeholder="Ask Pengurus...">
+        </aside>
+
+
+    </div>
+</body>
+</html>

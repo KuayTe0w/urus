@@ -1,3 +1,5 @@
+import { setupAuth, onAuthStateChanged, signOut } from './auth-client.js';
+let businessCurrency = 'BND';
 /* =========================================
    MOCK CAFE INVENTORY DATA
 ========================================= */
@@ -221,7 +223,7 @@ function persistProducts() {
 }
 
 
-loadSavedInventory();
+// Server data is loaded after Firebase authentication.
 
 /* =========================================
    CATEGORY + SUPPLIER MASTER DATA
@@ -316,6 +318,7 @@ let suppliers =
         SUPPLIER_STORAGE_KEY,
         DEFAULT_SUPPLIERS
     );
+let activeSuppliers = [];
 
 
 function persistCategories() {
@@ -407,6 +410,10 @@ function addUniqueMasterValue(
  Keep master lists in sync with products that may
  already exist in localStorage from an older version.
 */
+// Do not display demo or localStorage data while the server session loads.
+products = [];
+categories = [];
+suppliers = [];
 products.forEach(product => {
 
     addUniqueMasterValue(
@@ -423,8 +430,7 @@ products.forEach(product => {
 });
 
 
-persistCategories();
-persistSuppliers();
+// Master data is loaded from the server.
 
 
 /* =========================================
@@ -768,7 +774,7 @@ function refreshMasterDataUI() {
 
     fillSelect(
         itemSupplierSelect,
-        suppliers,
+        activeSuppliers,
         "Select Supplier"
     );
 
@@ -1309,7 +1315,7 @@ function renderProducts() {
                         ${formatQuantity(product.stock)}
                     </strong>
 
-                    ${product.unitType}
+                    ${escapeHTML(product.unitType)}
 
                 </td>
 
@@ -1318,7 +1324,7 @@ function renderProducts() {
 
                     ${formatQuantity(product.reorderLevel)}
 
-                    ${product.unitType}
+                    ${escapeHTML(product.unitType)}
 
                 </td>
 
@@ -1381,6 +1387,21 @@ function renderProducts() {
             `;
 
 
+            if (status === 'Low Stock' || status === 'Out of Stock') {
+                const action = row.querySelector('.action-buttons');
+                if (product.supplierArchived) {
+                    const unavailable = document.createElement('span');
+                    unavailable.className = 'reorder-unavailable';
+                    unavailable.textContent = 'Supplier archived';
+                    action.append(unavailable);
+                } else {
+                    const link = document.createElement('a');
+                    link.className = 'table-action-btn reorder-btn';
+                    link.textContent = 'Create order';
+                    link.href = `orders.html?reorder=${encodeURIComponent(product.id)}&business=${encodeURIComponent(serverBusiness)}`;
+                    action.append(link);
+                }
+            }
             tableBody.appendChild(row);
 
         });
@@ -1450,7 +1471,7 @@ function updateKPIs() {
 
 
     inventoryValueDisplay.textContent =
-        `BND ${inventoryValue.toFixed(2)}`;
+        `${businessCurrency} ${inventoryValue.toFixed(2)}`;
 }
 
 
@@ -1867,7 +1888,7 @@ function viewProduct(productId) {
                 <span>Current Stock</span>
                 <span>
                     ${formatQuantity(product.stock)}
-                    ${product.unitType}
+                    ${escapeHTML(product.unitType)}
                 </span>
             </div>
 
@@ -1875,7 +1896,7 @@ function viewProduct(productId) {
                 <span>Reorder Level</span>
                 <span>
                     ${formatQuantity(product.reorderLevel)}
-                    ${product.unitType}
+                    ${escapeHTML(product.unitType)}
                 </span>
             </div>
 
@@ -1887,7 +1908,7 @@ function viewProduct(productId) {
             <div class="detail-row">
                 <span>Cost per Unit</span>
                 <span>
-                    BND ${product.costPrice.toFixed(2)}
+                    ${businessCurrency} ${product.costPrice.toFixed(2)}
                 </span>
             </div>
 
@@ -2309,7 +2330,7 @@ const previewLimitMessage =
    EXCEL CONFIGURATION
 ========================================= */
 
-const IMPORT_HEADERS = [
+let IMPORT_HEADERS = [
     "Item Name",
     "SKU",
     "Category",
@@ -2317,7 +2338,7 @@ const IMPORT_HEADERS = [
     "Unit",
     "Reorder Level",
     "Supplier",
-    "Cost (BND)",
+    `Cost (${businessCurrency})`,
     "Expiry Date"
 ];
 
@@ -2632,7 +2653,7 @@ function downloadExcelTemplate() {
         ],
 
         [
-            "Cost (BND)",
+            `Cost (${businessCurrency})`,
             "Cost per selected stock unit."
         ],
 
@@ -2795,7 +2816,7 @@ function exportInventoryToExcel() {
                 "Supplier":
                     product.supplier,
 
-                "Cost (BND)":
+                [`Cost (${businessCurrency})`]:
                     product.costPrice,
 
                 "Expiry Date":
@@ -2804,7 +2825,7 @@ function exportInventoryToExcel() {
                 "Status":
                     getStockStatus(product),
 
-                "Inventory Value (BND)":
+                [`Inventory Value (${businessCurrency})`]:
                     Number(
                         (
                             product.stock *
@@ -2847,6 +2868,14 @@ function exportInventoryToExcel() {
         worksheet,
         "Inventory"
     );
+
+    XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet([
+        ['Business', document.querySelector('.header h1').textContent],
+        ['Currency', businessCurrency],
+        ['Generated at (UTC)', new Date().toISOString()],
+        ['Scope', 'All active products'],
+        ['Valuation', 'Current quantity multiplied by current unit cost']
+    ]), 'Information');
 
 
     const categoriesSheet =
@@ -2893,7 +2922,7 @@ function exportInventoryToExcel() {
 
     XLSX.writeFile(
         workbook,
-        `URUS_Cafe_Inventory_${today}.xlsx`
+        `URUS_Inventory_${today}.xlsx`
     );
 
 }
@@ -3750,7 +3779,7 @@ function validateImportRow(
 
     const costPrice =
         parsePositiveNumber(
-            row["Cost (BND)"]
+            row[`Cost (${businessCurrency})`]
         );
 
 
@@ -4500,4 +4529,150 @@ function clearImportError() {
 
 refreshMasterDataUI();
 
-renderProducts();
+// The server bridge initializes rendering after authentication.
+/* Authenticated API bridge for the original inventory interface. */
+let serverUser, serverBusiness, serverCategories = [], serverSuppliers = [];
+async function serverRequest(path, options = {}) {
+    if (!serverUser || !serverBusiness) throw new Error('Please sign in and select a business first.');
+    const headers = {Authorization: `Bearer ${await serverUser.getIdToken()}`, 'X-Business-ID': serverBusiness};
+    if (options.body) headers['Content-Type'] = 'application/json';
+    const response = await fetch('/api/v1' + path, {...options, headers});
+    const contentType = response.headers.get('content-type') || '';
+    const data = response.status === 204 ? null : contentType.includes('application/json') ? await response.json() : null;
+    if (!response.ok) throw new Error(data?.error || `Server error (${response.status}). Please try again.`);
+    if (response.status !== 204 && data === null) throw new Error('The server returned an unexpected response.');
+    return data;
+}
+function selectBusinessDetails(item) {
+    businessCurrency = item.currency;
+    IMPORT_HEADERS[7] = `Cost (${businessCurrency})`;
+    document.querySelectorAll('label[for="item-cost"], label[for="edit-item-cost"]').forEach(label => label.textContent = `Cost per Unit (${businessCurrency})`);
+}
+async function refreshServerData() {
+    [serverCategories, serverSuppliers] = await Promise.all([serverRequest('/categories'), serverRequest('/suppliers')]);
+    categories = serverCategories.map(x => x.name); suppliers = serverSuppliers.map(x => x.name);
+    activeSuppliers = serverSuppliers.filter(x => !x.archived_at).map(x => x.name);
+    let rows = [], batch, offset = 0;
+    do { batch = await serverRequest(`/products?limit=500&offset=${offset}`); rows.push(...batch); offset += batch.length; } while (batch.length === 500);
+    products = rows.map(p => ({id:p.id,name:p.name,sku:p.sku,category:serverCategories.find(c=>c.id===p.category_id)?.name || '',supplier:serverSuppliers.find(s=>s.id===p.supplier_id)?.name || '',supplierArchived:!!serverSuppliers.find(s=>s.id===p.supplier_id)?.archived_at,supplierIds:p.supplier_ids || [p.supplier_id],stock:Number(p.stock),unitType:p.unit,reorderLevel:Number(p.reorder_level),costPrice:Number(p.cost_price),expiryDate:p.expiry_date || ''}));
+    refreshMasterDataUI(); renderProducts();
+}
+function itemPayload(prefix) {
+    const val = key => document.getElementById(prefix + key).value;
+    return {name:val('name'),sku:val('sku'),category_id:serverCategories.find(x=>x.name===val('category'))?.id,supplier_id:serverSuppliers.find(x=>x.name===val('supplier'))?.id,supplier_ids:[...document.querySelectorAll(`#${prefix}extra-suppliers input:checked`)].map(input=>Number(input.value)),stock:val('stock'),unit:val('unit'),reorder_level:val('reorder'),cost_price:val('cost'),expiry_date:val('expiry') || null};
+}
+function renderExtraSuppliers(prefix, selected = []) {
+    const container = document.getElementById(`${prefix}extra-suppliers`);
+    container.replaceChildren();
+    serverSuppliers.filter(s => !s.archived_at || selected.includes(s.id)).forEach(s => {
+        const label = document.createElement('label');
+        label.style.cssText = 'display:flex;align-items:center;gap:8px;margin:6px 0';
+        const input = document.createElement('input'); input.type='checkbox'; input.value=s.id; input.checked=selected.includes(s.id);
+        label.append(input, document.createTextNode(s.name + (s.archived_at ? ' (archived)' : ''))); container.append(label);
+    });
+}
+for (const prefix of ['item-', 'edit-item-']) {
+    const group = document.getElementById(`${prefix}supplier`).closest('.form-group');
+    const section = document.createElement('div'); section.className='form-group full-width';
+    const heading = document.createElement('strong'); heading.textContent='Additional suppliers';
+    const primaryLabel = document.querySelector(`label[for="${prefix}supplier"]`); if (primaryLabel) primaryLabel.textContent='Primary supplier';
+    const list = document.createElement('div'); list.id=`${prefix}extra-suppliers`;
+    section.append(heading,list); group.after(section);
+}
+addItemBtn.addEventListener('click', () => renderExtraSuppliers('item-'));
+const originalEditProduct = window.editProduct;
+window.editProduct = id => { originalEditProduct(id); renderExtraSuppliers('edit-item-', products.find(p=>p.id===id)?.supplierIds || []); };
+const originalViewProduct = window.viewProduct;
+window.viewProduct = id => {
+    originalViewProduct(id);
+    const product = products.find(p=>p.id===id);
+    if (!product) return;
+    const row = document.createElement('div'); row.className='detail-row';
+    const label = document.createElement('span'); label.textContent='All suppliers';
+    const value = document.createElement('span'); value.textContent=product.supplierIds.map(id=>serverSuppliers.find(s=>s.id===id)?.name).filter(Boolean).join(', ');
+    row.append(label,value); viewItemContent.querySelector('.detail-list')?.append(row);
+};
+function showServerError(error) { alert(error.message || 'Request failed'); }
+document.addEventListener('submit', async event => {
+    const form = event.target;
+    if (!['add-item-form','edit-item-form','stock-update-form','new-category-form','new-supplier-form'].includes(form.id)) return;
+    event.preventDefault(); event.stopImmediatePropagation();
+    try {
+        if (form.id === 'add-item-form' || form.id === 'edit-item-form') {
+            const editing = form.id === 'edit-item-form';
+            const id = document.getElementById('edit-item-id').value;
+            await serverRequest('/products'+(editing?`/${id}`:''), {method:editing?'PATCH':'POST',body:JSON.stringify(itemPayload(editing?'edit-item-':'item-'))});
+            if (editing) editItemModal.classList.add('hidden'); else closeAddItemModal();
+        } else if (form.id === 'stock-update-form') {
+            const id = document.getElementById('stock-product-id').value;
+            await serverRequest(`/products/${id}/movements`,{method:'POST',body:JSON.stringify({action:document.getElementById('stock-action').value,quantity:document.getElementById('stock-quantity').value,reason:document.getElementById('stock-reason').value})});
+            closeStockUpdateModal();
+        } else {
+            const isCategory = form.id === 'new-category-form';
+            const name = (isCategory ? newCategoryName : newSupplierName).value.trim();
+            const target = isCategory ? categoryReturnTarget : supplierReturnTarget;
+            const list = isCategory ? serverCategories : serverSuppliers;
+            let existing = list.find(x=>x.name.toLowerCase()===name.toLowerCase());
+            if (existing?.archived_at) throw new Error('This supplier is archived. Restore it from the Suppliers archive first.');
+            if (!existing) existing = await serverRequest(isCategory?'/categories':'/suppliers',{method:'POST',body:JSON.stringify({name})});
+            await refreshServerData();
+            if (target) target.value = existing.name;
+            if (!isCategory) {
+                const prefix = target === editItemSupplierSelect ? 'edit-item-' : 'item-';
+                const chosen = [...document.querySelectorAll(`#${prefix}extra-suppliers input:checked`)].map(input => Number(input.value));
+                renderExtraSuppliers(prefix, chosen);
+            }
+            if (isCategory) closeCategoryModal(); else closeSupplierModal();
+            return;
+        }
+        await refreshServerData();
+    } catch (error) { showServerError(error); }
+}, true);
+document.addEventListener('click', async event => {
+    if (!event.target.closest('#confirm-import-btn')) return;
+    event.preventDefault(); event.stopImmediatePropagation();
+    try {
+        const rows = pendingImportProducts.map(p=>({name:p.name,sku:p.sku,category:p.category,supplier:p.supplier,stock:p.stock,unit:p.unitType,reorder_level:p.reorderLevel,cost_price:p.costPrice,expiry_date:p.expiryDate || null}));
+        const preview = await serverRequest('/imports/products/preview',{method:'POST',body:JSON.stringify({rows})});
+        if (preview.errors.length) throw new Error(preview.errors.map(e=>`Row ${e.row}: ${e.error}`).join('\n'));
+        const result = await serverRequest('/imports/products/commit',{method:'POST',body:JSON.stringify({rows})});
+        closeImportExcelModal(); await refreshServerData(); alert(`${result.imported} items imported.`);
+    } catch(error) { showServerError(error); }
+}, true);
+window.deleteProduct = async id => {
+    const product = products.find(p=>p.id===id);
+    if (!product || !confirm(`Archive "${product.name}"?`)) return;
+    try { await serverRequest(`/products/${id}`,{method:'DELETE'}); await refreshServerData(); } catch(error) { showServerError(error); }
+};
+try {
+    const auth = await setupAuth();
+    document.querySelector('.logout-btn')?.addEventListener('click',()=>signOut(auth));
+    onAuthStateChanged(auth,async user=>{
+        if (!user) { location.replace('/'); return; }
+        serverUser=user;
+        try {
+            const response=await fetch('/api/v1/me',{headers:{Authorization:`Bearer ${await user.getIdToken()}`}});
+            const type=response.headers.get('content-type') || '';
+            const me=type.includes('application/json') ? await response.json() : null;
+            if(!response.ok) throw new Error(me?.error || `Server error (${response.status})`);
+            if(!me?.businesses?.length) { location.replace('/onboarding.html'); return; }
+            const select = document.getElementById('business-switch');
+            select.replaceChildren(...me.businesses.map(item => { const option = document.createElement('option'); option.value = item.id; option.textContent = item.name; return option; }));
+            select.hidden = me.businesses.length < 2;
+            const saved = sessionStorage.getItem('urus-business-id');
+            serverBusiness = me.businesses.some(item => String(item.id) === saved) ? saved : String(me.businesses[0].id);
+            select.value = serverBusiness;
+            sessionStorage.setItem('urus-business-id', serverBusiness);
+            selectBusinessDetails(me.businesses.find(item => String(item.id) === serverBusiness));
+            document.querySelector('.header h1').textContent = me.businesses.find(item => String(item.id) === serverBusiness).name;
+            select.onchange = async () => {
+                serverBusiness = select.value;
+                sessionStorage.setItem('urus-business-id', serverBusiness);
+                selectBusinessDetails(me.businesses.find(item => String(item.id) === serverBusiness));
+                document.querySelector('.header h1').textContent = me.businesses.find(item => String(item.id) === serverBusiness).name;
+                try { await refreshServerData(); } catch (error) { showServerError(error); }
+            };
+            await refreshServerData();
+        } catch(error) { showServerError(error); }
+    });
+} catch(error) { showServerError(error); }

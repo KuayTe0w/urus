@@ -1,0 +1,9 @@
+{
+  "hosting": {
+    "public": ".firebase-public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/api/**", "run": { "serviceId": "urus-api", "region": "asia-southeast1" } }
+    ]
+  }
+}

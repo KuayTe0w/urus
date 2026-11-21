@@ -1,0 +1,24 @@
+name: Staging preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  preview:
+    # Never expose credentials to code from a fork, and never fall back to production.
+    if: github.event.pull_request.head.repo.full_name == github.repository && vars.URUS_STAGING_PROJECT_ID != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare isolated staging hosting
+        run: python3 deploy/build-preview.py
+        env:
+          URUS_STAGING_PROJECT_ID: ${{ vars.URUS_STAGING_PROJECT_ID }}
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_STAGING_SERVICE_ACCOUNT }}'
+          projectId: '${{ vars.URUS_STAGING_PROJECT_ID }}'
+          entryPoint: .preview-hosting

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urus Orders</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/orders.css">
+    <link rel="stylesheet" href="assets/css/order-entry.css">
+    <script src="assets/js/app.js" defer></script>
+    <script type="module" src="assets/js/orders.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!--HEADER-->
+        <header class="header">
+            <button id="menu-btn" class="menu-btn">☰</button>
+            <h1 aria-live="polite"></h1>
+
+            <div class="header-actions">
+
+                <button class="icon-btn settings-btn">
+                    <img src="assets/icons/gear.png">
+                </button>
+
+                <button class="icon-btn logout-btn">
+                    <img src="assets/icons/logout.png">
+                </button>
+
+            </div>
+        </header>
+
+        <!--SIDEBAR-->
+        <aside class="sidebar" id="sidebar"><a href="dashboard.html">Dashboard</a><a href="inventory.html">Inventory</a><a href="suppliers.html">Suppliers</a><a href="movements.html">Stock movements</a><a href="orders.html">Orders</a><a href="reports.html">Reports</a></aside>
+
+        <!--MAIN-->
+        <main class="main"><section class="order-stats"><article class="order-stat"><span>Pending Orders</span><strong id="pending-count">—</strong></article><article class="order-stat"><span>Received This Month</span><strong id="received-count">—</strong></article><article class="order-stat"><span>Ordered Value</span><strong id="ordered-value">—</strong></article></section><div class="order-header"><h2>Purchase orders</h2><button id="new-order">+ Create order</button></div><p id="message" role="alert"></p><div class="card"><table><thead><tr><th>Order</th><th>Supplier</th><th>Created</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody id="orders"></tbody></table></div></main><dialog id="order-dialog"><form id="order-form"><h2>New purchase order</h2><label>Supplier<select id="supplier" required></select></label><div id="lines"></div><p id="supplier-items-message"></p><label>Link an existing product to this supplier<select id="link-product"></select></label><button type="button" id="link-product-btn">Link product</button><button type="button" id="add-line">+ Add item</button><div class="order-actions"><button>Save order</button><button type="button" id="cancel-order">Cancel</button></div></form></dialog><dialog id="view-dialog"><section class="order-view"><div class="view-heading"><div><span class="eyebrow">PURCHASE ORDER</span><h2 id="view-title"></h2></div><button id="close-view" class="view-close" aria-label="Close">×</button></div><div id="details" class="view-items"></div><div class="order-actions"><button id="receive" class="receive-button">Receive all items</button></div></section></dialog>
+
+        <div class="resize-handle"></div>
+
+        <!--CHATBOT-->
+        <aside class="chat-panel">
+            <h3>Ask Pengurus</h3>
+            <div class="messages"></div>
+            <input type="text" placeholder="Ask Pengurus...">
+        </aside>
+
+
+    </div>
+</body>
+</html>
